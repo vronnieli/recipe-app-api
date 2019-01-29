@@ -1,0 +1,20 @@
+# version of docker-compose that we're using
+version: "3"
+
+# define the services that make up the app
+services:
+  # name of service
+  app:
+    build:
+      # context is '.' (i.e. current directory), where docker-compose is being run from
+      context: .
+    ports:
+      # maps project from 8000 on our host, to 8000 on our image (host:image)
+      - "8000:8000"
+    # volume allows project updates to reflect on the docker image in real time; maps volume from local machine to docker container running the app; whenever you change a file/something in the project, it will automatically update the docker container without having to reset
+    volumes:
+      # maps 'app' directory on local to 'app' directory on docker image
+      - ./app:/app
+      # run command using shell (sh), run django development server available on host 0.0.0.0, i.e. all ip address on the docker container, on port 8000, which is mapped to local machine through the ports configuration; run our application and connect to it on port 8000 on local machine
+    command: >
+      sh -c "python manage.py runserver 0.0.0.0:8000"
